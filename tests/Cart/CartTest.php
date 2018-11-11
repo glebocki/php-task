@@ -120,8 +120,8 @@ class CartTest extends TestCase
     public function itClearsCartAfterCheckout(): void
     {
         $cart = new Cart();
-        $cart->addProduct($this->buildTestProduct(1, 15000));
-        $cart->addProduct($this->buildTestProduct(2, 10000), 2);
+        $cart->addProduct($this->buildTestProductWithtax(1, 15000, 5));
+        $cart->addProduct($this->buildTestProductWithtax(2, 10000, 23), 2);
 
         $order = $cart->checkout(7);
 
@@ -129,9 +129,26 @@ class CartTest extends TestCase
         $this->assertEquals(0, $cart->getTotalPrice());
         $this->assertInstanceOf(Order::class, $order);
         $this->assertEquals(['id' => 7, 'items' => [
-            ['id' => 1, 'quantity' => 1, 'total_price' => 15000],
-            ['id' => 2, 'quantity' => 2, 'total_price' => 20000],
-        ], 'total_price' => 35000], $order->getDataForView());
+            ['id' => 1, 'tax_rate' => '5%', 'quantity' => 1,
+                'total_price' => 15000, 'total_price_gross' => 15750],
+            ['id' => 2, 'tax_rate' => '23%', 'quantity' => 2,
+                'total_price' => 20000, 'total_price_gross' => 20460],
+        ], 'total_price' => 35000, 'total_price_gross' => 36210], $order->getDataForView());
+    }
+
+    /**
+     * @test
+     */
+    public function itAddsOneProductWithTax()
+    {
+        $product = $this->buildTestProductWithtax(1, 15000, 5);
+
+        $cart = new Cart();
+        $cart->addProduct($product, 1);
+
+        $this->assertCount(1, $cart->getItems());
+        $this->assertEquals(15750, $cart->getTotalPriceGross());
+        $this->assertEquals($product, $cart->getItem(0)->getProduct());
     }
 
     public function getNonExistentItemIndexes(): array
@@ -147,5 +164,10 @@ class CartTest extends TestCase
     private function buildTestProduct(int $id, int $price): Product
     {
         return (new Product())->setId($id)->setUnitPrice($price);
+    }
+
+    private function buildTestProductWithtax(int $id, int $price, int $taxRate): Product
+    {
+        return (new Product())->setId($id)->setUnitPrice($price)->setTaxRate($taxRate);
     }
 }

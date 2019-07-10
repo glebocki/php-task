@@ -2,6 +2,7 @@
 
 namespace Recruitment\Cart;
 
+use OutOfBoundsException;
 use Recruitment\Entity\Order;
 use Recruitment\Entity\Product;
 
@@ -25,17 +26,26 @@ class Cart
      */
     public function addProduct(Product $product, int $quantity = 1): Cart
     {
-        // Look for Product on list. If found increase quantity and exit.
+        // Look for Product on list. If found increase quantity.
+        if ($item = $this->findItemByProduct($product)) {
+            $item->setQuantity($item->getQuantity() + $quantity);
+        } else {
+            // Add new Item to list
+            $this->items[] = new Item($product, $quantity);
+        }
+
+        return $this;
+    }
+
+    private function findItemByProduct($product): ?Item
+    {
         foreach ($this->items as $item) {
             if ($item->getProduct() === $product) {
-                $item->setQuantity($item->getQuantity() + $quantity);
-                return $this;
+                return $item;
             }
         }
 
-        // Add new Item to list
-        $this->items[] = new Item($product, $quantity);
-        return $this;
+        return null;
     }
 
     /**
@@ -81,7 +91,7 @@ class Cart
         if (array_key_exists($index, $this->items)) {
             return $this->items[$index];
         } else {
-            throw new \OutOfBoundsException();
+            throw new OutOfBoundsException();
         }
     }
 

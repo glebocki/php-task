@@ -37,6 +37,10 @@ class Cart
         return $this;
     }
 
+    /**
+     * @param $product
+     * @return Item|null
+     */
     private function findItemByProduct($product): ?Item
     {
         foreach ($this->items as $item) {

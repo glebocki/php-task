@@ -70,14 +70,17 @@ class Item
 
     /**
      * @param int $quantity
+     * @return Item
      * @throws
      */
-    public function setQuantity(int $quantity): void
+    public function setQuantity(int $quantity): Item
     {
         if ($quantity < $this->product->getMinimumQuantity()) {
             throw new QuantityTooLowException;
         }
 
         $this->quantity = $quantity;
+
+        return $this;
     }
 }

@@ -26,11 +26,9 @@ class Cart
      */
     public function addProduct(Product $product, int $quantity = 1): Cart
     {
-        // Look for Product on list. If found increase quantity.
-        if ($item = $this->findItemByProduct($product)) {
+        if ($item = $this->findProduct($product)) {
             $item->setQuantity($item->getQuantity() + $quantity);
         } else {
-            // Add new Item to list
             $this->items[] = new Item($product, $quantity);
         }
 
@@ -41,7 +39,7 @@ class Cart
      * @param $product
      * @return Item|null
      */
-    private function findItemByProduct($product): ?Item
+    private function findProduct($product): ?Item
     {
         foreach ($this->items as $item) {
             if ($item->getProduct() === $product) {
@@ -92,11 +90,11 @@ class Cart
      */
     public function getItem(int $index): Item
     {
-        if (array_key_exists($index, $this->items)) {
-            return $this->items[$index];
-        } else {
+        if (!array_key_exists($index, $this->items)) {
             throw new OutOfBoundsException();
         }
+
+        return $this->items[$index];
     }
 
     /**
@@ -121,15 +119,13 @@ class Cart
      */
     public function setQuantity(Product $product, int $quantity): Cart
     {
-        // Look for Product on list. If found update quantity and exit.
-        foreach ($this->items as $item) {
-            if ($item->getProduct() === $product) {
-                $item->setQuantity($quantity);
-                return $this;
-            }
+        if ($item = $this->findProduct($product)) {
+            $item->setQuantity($quantity);
+        } else {
+            $this->addProduct($product, $quantity);
         }
 
-        return $this->addProduct($product, $quantity);
+        return $this;
     }
 
     /**

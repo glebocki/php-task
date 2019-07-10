@@ -2,6 +2,7 @@
 
 namespace Recruitment\Cart;
 
+use InvalidArgumentException;
 use Recruitment\Cart\Exception\QuantityTooLowException;
 use Recruitment\Entity\Product;
 
@@ -24,7 +25,7 @@ class Item
     public function __construct(Product $product, int $quantity)
     {
         if ($quantity < $product->getMinimumQuantity()) {
-            throw new \InvalidArgumentException();
+            throw new InvalidArgumentException();
         }
 
         $this->product = $product;
@@ -63,7 +64,9 @@ class Item
         $taxPercentage = $this->product->getTaxRate() / 100;
         $totalPrice = $this->getTotalPrice();
         $tax = $totalPrice * $taxPercentage;
-        return $totalPrice + $tax;
+        $totalPriceGross = $totalPrice + $tax;
+
+        return $totalPriceGross;
     }
 
     /**

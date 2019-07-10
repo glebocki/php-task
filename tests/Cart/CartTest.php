@@ -128,12 +128,27 @@ class CartTest extends TestCase
         $this->assertCount(0, $cart->getItems());
         $this->assertEquals(0, $cart->getTotalPrice());
         $this->assertInstanceOf(Order::class, $order);
-        $this->assertEquals(['id' => 7, 'items' => [
-            ['id' => 1, 'tax_rate' => '5%', 'quantity' => 1,
-                'total_price' => 15000, 'total_price_gross' => 15750],
-            ['id' => 2, 'tax_rate' => '23%', 'quantity' => 2,
-                'total_price' => 20000, 'total_price_gross' => 20460],
-        ], 'total_price' => 35000, 'total_price_gross' => 36210], $order->getDataForView());
+        $this->assertEquals([
+            'id' => 7,
+            'items' => [
+                [
+                    'id' => 1,
+                    'tax_rate' => '5%',
+                    'quantity' => 1,
+                    'total_price' => 15000,
+                    'total_price_gross' => 15750
+                ],
+                [
+                    'id' => 2,
+                    'tax_rate' => '23%',
+                    'quantity' => 2,
+                    'total_price' => 20000,
+                    'total_price_gross' => 24600
+                ],
+            ],
+            'total_price' => 35000,
+            'total_price_gross' => 40350
+        ], $order->getDataForView());
     }
 
     /**

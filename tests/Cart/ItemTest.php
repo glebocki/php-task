@@ -46,4 +46,13 @@ class ItemTest extends TestCase
         $item = new Item($product, 10);
         $item->setQuantity(9);
     }
+
+    /**
+     * @test
+     * @expectedException \InvalidArgumentException
+     */
+    public function itThrowsExceptionWhenSettingIncorrectTaxRate(): void
+    {
+        (new Product)->setTaxRate(11);
+    }
 }

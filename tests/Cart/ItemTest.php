@@ -55,4 +55,15 @@ class ItemTest extends TestCase
     {
         (new Product)->setTaxRate(11);
     }
+
+    /**
+     * @test
+     */
+    public function itReturnsTotalPriceGrossWithTax23() {
+        $product = (new Product)->setUnitPrice(10000)->setTaxRate(23);
+
+        $item = new Item($product, 2);
+
+        $this->assertEquals(24600, $item->getTotalPriceGross());
+    }
 }

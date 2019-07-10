@@ -44,8 +44,10 @@ class Order
         foreach ($this->items as $item) {
             $items[] = [
                 'id' => $item->getProduct()->getId(),
+                'tax_rate' => $item->getProduct()->getTaxRate() . '%',
                 'quantity' => $item->getQuantity(),
                 'total_price' => $item->getTotalPrice(),
+                'total_price_gross' => $item->getTotalPriceGross(),
             ];
         }
 
@@ -53,16 +55,16 @@ class Order
             'id' => $this->id,
             'items' => $items,
             'total_price' => $this->getTotalPrice(),
-            'total_gross_price' => $this->getTotalGrossPrice(),
+            'total_price_gross' => $this->getTotalPriceGross(),
         ];
     }
 
-    private function getTotalGrossPrice()
+    private function getTotalPriceGross()
     {
-        $totalGrossPrice = 0;
+        $totalPriceGross = 0;
         foreach ($this->items as $item) {
-            $totalGrossPrice += $item->getTotalPriceGross();
+            $totalPriceGross += $item->getTotalPriceGross();
         }
-        return $totalGrossPrice;
+        return $totalPriceGross;
     }
 }

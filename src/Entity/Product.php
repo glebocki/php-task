@@ -2,6 +2,7 @@
 
 namespace Recruitment\Entity;
 
+use InvalidArgumentException;
 use Recruitment\Entity\Exception\InvalidUnitPriceException;
 
 /**
@@ -80,7 +81,7 @@ class Product
     public function setMinimumQuantity(int $minimumQuantity): Product
     {
         if ($minimumQuantity < self::DEFAULT_MIN_QUANTITY) {
-            throw new \InvalidArgumentException();
+            throw new InvalidArgumentException();
         }
 
         $this->minimumQuantity = $minimumQuantity;
@@ -120,7 +121,7 @@ class Product
     public function setTaxRate($taxRate): Product
     {
         if (!in_array($taxRate, self::TAX_RATES)) {
-            throw new \InvalidArgumentException;
+            throw new InvalidArgumentException;
         }
 
         $this->taxRate = $taxRate;

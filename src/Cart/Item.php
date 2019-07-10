@@ -65,7 +65,6 @@ class Item
         $totalPrice = $this->getTotalPrice();
         $tax = $totalPrice * $taxPercentage;
         $totalPriceGross = $totalPrice + $tax;
-
         return $totalPriceGross;
     }
 

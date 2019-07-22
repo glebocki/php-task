@@ -2,7 +2,9 @@
 
 namespace Recruitment\Entity\Exception;
 
-class InvalidUnitPriceException extends \Exception
+use InvalidArgumentException;
+
+class InvalidUnitPriceException extends InvalidArgumentException
 {
 
     /**
